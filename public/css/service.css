@@ -1,0 +1,49 @@
+.selected-images{
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item-images{
+    width: 33.333333333333%;
+    height: 150px;
+    overflow: hidden;
+    padding: 5px;
+
+}
+.item-images>img{
+    width:100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 2px solid #6658dd;
+}
+.jquery-main-modal,.js-img{
+    background: rgba(0,0,0,0.5);
+}
+.role-css{
+    position: absolute;
+    right: -2rem;
+    transform: translate(23px, -25px);
+    top: -2rem;
+    background-color: #fff;
+    border-radius: .5rem;
+    opacity: 1;
+    padding: .635rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(161,172,184,.4);
+    transition: all .23s ease .1s;
+}
+.jqr-badge{
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 1em;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ct-badge-color);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    box-shadow: none;
+}
