@@ -132,91 +132,52 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 // console.log(data);
-                // let dataStylist = data.dataStylist;
-                // let dataTimeSheet = data.dataTimeSheet;
-                // let work_day = data.workDay;
-                // let stylist_time_sheet = data.stylist_time_sheet;
-                // console.log(response.data);
-                // if (dataTimeSheet.length % 3 === 0) {
-                //     count = dataTimeSheet.length / 3;
-                // } else {
-                //     count = Math.floor(dataTimeSheet.length / 3) + 1;
-                // }
-                // let timesheet_box = ``;
-                // for (let i = 0; i < count; i++) {
-                //     timesheet_box += `<div class="swiper-slide box-time_gr" style="width: 101.048px; margin-right: 8px;">`;
-                //     for (let j = 0; j < 3; j++) {
-                //         let index = i * 3 + j;
-                //         if (index < dataTimeSheet.length) {
-                //             let unavailable = "unavailable";
-                //             for (let k = 0; k < dataStylist.time_sheet.length; k++) {
-                //                 if (dataStylist.time_sheet[k].id === dataTimeSheet[index].id &&
-                //                     dataStylist.work_day[k].day === selectedDate &&
-                //                     stylist_time_sheet[k].is_block === 1) {
-                //                     unavailable = "";
-                //                     break;
-                //                 }
-                //             }
-                //             timesheet_box += `<div class="box_time_item ${unavailable}" data-id="${dataTimeSheet[index].id}" role="presentation">${dataTimeSheet[index].hour}h${dataTimeSheet[index].minutes}</div>`;
-                //         }
-                //     }
-                //     timesheet_box += `</div>`;
-                // }
-                // $('.jqr-timesheet').append(timesheet_box);
-
+                let dataStylist = data.dataStylist;
+                let dataTimeSheet = data.dataTimeSheet;
+                let work_day = data.workDay;
+                let stylist_time_sheet = data.stylist_time_sheet;
                 $('.jqr-timesheet').html('');
-                const time  = new Date()
-                let datTimeSheet = catMangThanhMangCon(data.dataTimeSheet,6) 
-                let day =  $('#jqr-selectedDate').val().toString();
-                // console.log('day',day.slice);
-                let check = false
-                if (parseInt(time.getDay()) == parseInt(day.split('-')[2]) 
-                    && parseInt(time.getMonth()+1) == parseInt(day.split('-')[1])
-                    && parseInt(time.getFullYear()) == parseInt(day.split('-')[0]) ) {
-                    check = true
+                let count = 0;
+
+                if (dataTimeSheet.length % 3 === 0) {
+                    count = dataTimeSheet.length / 3;
+                } else {
+                    count = Math.floor(dataTimeSheet.length / 3) + 1;
                 }
-                let timesheet_boxes = data.data.filter(arr => arr.day.toString()  === day )
                 let timesheet_box = ``;
-                datTimeSheet.forEach((arr) => {
-                    timesheet_box +=  '<div class="swiper-slide box-time_gr" style="width: 101.048px; margin-right: 8px;">'
-                    arr.forEach(item =>{
-                        let unavailable = timesheet_boxes.filter(arr=>arr.id == item.id).length >0 ? '' : 'unavailable'
-                        let unavailableHoues = ''
-                        if(check == true){
-                            if(parseInt(item.hour) == parseInt(time.getHours()) && parseInt(item.minutes) > parseInt(time.getMinutes())){
-                                unavailableHoues = 'unavailable'
-                            }else if(parseInt(time.getHours()) > parseInt(item.hour)){
-                                unavailableHoues = 'unavailable'
+                for (let i = 0; i < count; i++) {
+                    timesheet_box += `<div class="swiper-slide box-time_gr" style="width: 101.048px; margin-right: 8px;">`;
+                    for (let j = 0; j < 3; j++) {
+                        let index = i * 3 + j;
+                        if (index < dataTimeSheet.length) {
+                            let unavailable = "unavailable";
+                            for (let k = 0; k < dataStylist.time_sheet.length; k++) {
+                                if (dataStylist.time_sheet[k].id === dataTimeSheet[index].id &&
+                                    dataStylist.work_day[k].day === selectedDate &&
+                                    stylist_time_sheet[k].is_block === 1) {
+                                    unavailable = "";
+                                    break;
+                                }
                             }
+                            timesheet_box += `<div class="box_time_item ${unavailable}" data-id="${dataTimeSheet[index].id}" role="presentation">${dataTimeSheet[index].hour}h${dataTimeSheet[index].minutes}</div>`;
                         }
-                        timesheet_box+= `<div class="box_time_item 
-                        ${unavailable} ${unavailableHoues} data-id="${item.id}" role="presentation">${item.hour}h${item.minutes}</div>`
-                    })            
-                    timesheet_box+= '</div>'
-                })
+                    }
+                    timesheet_box += `</div>`;
+                }
                 $('.jqr-timesheet').append(timesheet_box);
             },
             error: function (error) {
                 console.error(error);
             }
         });
-        // clearTime = setTimeout(() => timeSheetCallback(stylist), 15000);
+        clearTime = setTimeout(() => timeSheetCallback(stylist), 30000);
     }
 
-    // function timeSheetCallback(stylist) {
-    //     // Kiểm tra xem shouldRunTimeSheet có là true hay không trước khi gọi lại timeSheet
-    //     if (validateTimeSheet) {
-    //         timeSheet(stylist);
-    //     }
-    // }
-
-    function catMangThanhMangCon(mangGoc, kichThuocMangCon) {
-        let ketQua = [];
-        for (let i = 0; i < mangGoc.length; i += kichThuocMangCon) {
-            let mangCon = mangGoc.slice(i, i + kichThuocMangCon);
-            ketQua.push(mangCon);
+    function timeSheetCallback(stylist) {
+        // Kiểm tra xem shouldRunTimeSheet có là true hay không trước khi gọi lại timeSheet
+        if (validateTimeSheet) {
+            timeSheet(stylist);
         }
-        return ketQua;
     }
 
     $(document).on('click', '.jqr-showAllService', function () {
@@ -511,7 +472,7 @@ $(document).ready(function () {
                         service += `
                                 <div class="list__item">
                                     <div class="item__media " role="presentation">
-                                       <img src="/storage/${imgService[countImg].images[0].url}" alt width="251" height="236">
+                                       <img src="/storage/${imgService[countImg].images[0].url}" alt>
 
                                     </div>
                                     <div class="fs-6 fw-bold mx-2 service-name" role="presentation">${data[i].service[j].name}</div>

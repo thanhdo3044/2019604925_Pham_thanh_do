@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Client\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use App\Mail\AdminMail;
 use App\Mail\destroyBooking;
 use App\Mail\MailStylist;
@@ -41,41 +40,16 @@ class BookingController extends Controller
         $data = User::query()->where('user_type', 'STYLIST')->get();
         return response()->json($data);
     }
-
-
-    // public function timeSheetDetail(string $id)
-    // {
-    //     // $dataStylist = User::query()->with('timeSheet','workDay')->where('id', $id)->first();
-    //     // $dataTimeSheet = Timesheet::all();
-    //     // $workDay = WorkDay::all();
-    //     // $stylist_time_sheet = StylistTimeSheet::query()->where('user_id',$id)->get();
-    //     // return response()->json(['dataStylist' => $dataStylist,
-    //     //                         'dataTimeSheet' => $dataTimeSheet,
-    //     //                          'workDay' => $workDay,
-    //                             //  'stylist_time_sheet' => $stylist_time_sheet]);
-    //     $data = DB::table('stylist_time_sheet as sts')
-    //     ->join('work_days as wd', 'sts.work_day_id', '=', 'wd.id')
-    //     ->join('timesheets as ts', 'sts.timesheet_id', '=', 'ts.id')
-    //     ->where('sts.is_block', '=', 1)
-    //     ->get();
-    //      return response()->json($data);
-    // }
     public function timeSheetDetail(string $id)
     {
-        date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $date = getdate();
-        // $data = DateTimeZone::listIdentifiers();
-        $data = DB::table('stylist_time_sheet as sts')
-        ->join('work_days as wd', 'sts.work_day_id', '=', 'wd.id')
-        ->join('timesheets as ts', 'sts.timesheet_id', '=', 'ts.id')
-        ->where('sts.is_block', '=', 1)
-        ->where('user_id', $id)
-        ->whereYear('wd.day', '>=', $date['year'])
-        ->whereMonth('wd.day', '>=', $date['mon'])
-        ->whereDay('wd.day', '>=', $date['mday'])
-        ->get();
+        $dataStylist = User::query()->with('timeSheet','workDay')->where('id', $id)->first();
         $dataTimeSheet = Timesheet::all();
-        return response()->json(["data"=> $data, "dataTimeSheet" =>$dataTimeSheet]);
+        $workDay = WorkDay::all();
+        $stylist_time_sheet = StylistTimeSheet::query()->where('user_id',$id)->get();
+        return response()->json(['dataStylist' => $dataStylist,
+                                'dataTimeSheet' => $dataTimeSheet,
+                                 'workDay' => $workDay,
+                                 'stylist_time_sheet' => $stylist_time_sheet]);
     }
 
     public function randomStylist()
